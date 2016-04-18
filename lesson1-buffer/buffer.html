@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="lib.js"></script>
+</head>
+<body>
+<canvas id="webglCanvas" width="500" height="500"></canvas>
+<script>
+    var vertexShaderSource="" +
+            "attribute vec4 apos;" +
+            "void main(){" +
+            "  gl_Position=apos;" +
+            "  gl_PointSize=20.0;" +
+            "}" +
+            "";
+    var fragmentShaderSource="" +
+            "void main(){" +
+            "  gl_FragColor=vec4(1.0,0.0,0.0,1.0);" +
+            "}" +
+            "";
+    var cxt=document.getElementById("webglCanvas").getContext("webgl");
+    var program=initShader(cxt,vertexShaderSource,fragmentShaderSource);
+
+
+    var data=new Float32Array([
+        0.0,0.0,
+        0.6,0.8,
+        0.2,0.5
+    ]);
+    var buffer=cxt.createBuffer();
+    cxt.bindBuffer(cxt.ARRAY_BUFFER,buffer);
+    cxt.bufferData(cxt.ARRAY_BUFFER,data,cxt.STATIC_DRAW);
+
+    var aposLocation=cxt.getAttribLocation(program,"apos");
+    cxt.vertexAttribPointer(aposLocation,2,cxt.FLOAT,false,0,0);
+    cxt.enableVertexAttribArray(aposLocation);
+
+
+    cxt.clearColor(0.0,0.0,1.0,1.0);
+    cxt.clear(cxt.COLOR_BUFFER_BIT);
+    cxt.drawArrays(cxt.POINTS,0,3);
+</script>
+</body>
+</html>

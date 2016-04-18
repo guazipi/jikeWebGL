@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function main() {
+            var vertexShaderSource = "" +
+                    "attribute vec4 apos;" +
+                    "void main(){" +
+                    "  gl_Position=apos;" +
+                    "  gl_PointSize=10.0;" +
+                    "}" +
+                    "";
+            var fragmentShaderSource = "" +
+                    "void main(){" +
+                    "  gl_FragColor=vec4(1.0,0.5,0.0,0.1);" +
+                    "}" +
+                    "";
+
+            var canvas = document.getElementById("myCanvas");
+            var cxt = canvas.getContext("webgl");
+
+            var vertexShader = cxt.createShader(cxt.VERTEX_SHADER);
+            var fragmentShader = cxt.createShader(cxt.FRAGMENT_SHADER);
+            cxt.shaderSource(vertexShader, vertexShaderSource);
+            cxt.shaderSource(fragmentShader, fragmentShaderSource);
+            cxt.compileShader(vertexShader);
+            cxt.compileShader(fragmentShader);
+            if (!cxt.getShaderParameter(vertexShader, cxt.COMPILE_STATUS)) {
+                alert("error:vertexShaderObject编译错误!");
+                return;
+            }
+            if (!cxt.getShaderParameter(fragmentShader, cxt.COMPILE_STATUS)) {
+                alert("error:fragmentShaderObject编译错误!");
+                return;
+            }
+
+            var program = cxt.createProgram();
+            cxt.attachShader(program, vertexShader);
+            cxt.attachShader(program, fragmentShader);
+            cxt.linkProgram(program);
+            cxt.useProgram(program);
+
+            var aposLocation = cxt.getAttribLocation(program, 'apos');
+            cxt.clearColor(0.2, 0.2, 0.2, 1.0);
+            cxt.clear(cxt.COLOR_BUFFER_BIT);
+
+            cxt.vertexAttrib4f(aposLocation, 0.4, 0.4, 0.0, 1.0);
+
+            cxt.drawArrays(cxt.POINTS, 0, 1);
+
+        }
+    </script>
+</head>
+<body onload="main();">
+<canvas id="myCanvas" width="500px" height="500px"></canvas>
+</body>
+</html>
