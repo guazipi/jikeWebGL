@@ -1,0 +1,16 @@
+#position1{
+    width:100px;
+    height:100px;
+    background-color:blue;
+    position:relative;
+    left:20px;
+    top:20px;
+}
+#position2{
+    width:100px;
+    height:100px;
+    background-color:aqua;
+    position:relative;
+    left:10px;
+    top:10px;
+}

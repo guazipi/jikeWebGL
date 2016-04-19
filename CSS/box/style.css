@@ -1,0 +1,45 @@
+/*body p {*/
+/*background-color: red;*/
+/*}*/
+
+/*body {*/
+/*background-image: url("Garfield.jpg");*/
+/*background-repeat:no-repeat;*/
+/*background-position:left top;*/
+/*background-attachment: fixed;*/
+/*}*/
+body {
+    margin: 0;
+}
+
+.container {
+    margin: 50px;
+}
+
+.bd {
+    border-style: dotted;
+}
+
+.pd {
+    padding: 10px;
+}
+
+.content {
+    background-color: red;
+}
+
+.container1 {
+    margin: 120px;
+}
+
+.bd1 {
+    border-style: dotted;
+}
+
+.pd1 {
+    padding: 10px;
+}
+
+.content1 {
+    background-color: red;
+}
