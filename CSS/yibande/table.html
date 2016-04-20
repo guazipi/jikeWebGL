@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表格设计样式</title>
+    <style type="text/css">
+        #tb{
+            border-collapse:collapse;
+            width:500px;
+        }
+        #tb td,#tb th{
+            border:1px solid #342eff;
+            padding:5px;
+        }
+        #tb th{
+            text-align: right;
+            background-color: #ffb734;
+            color:white;
+        }
+        #tb tr.alt td{
+            color:black;
+            background-color:aquamarine;
+        }
+    </style>
+</head>
+<body>
+<table id="tb">
+    <tr>
+        <th>姓名</th>
+        <th>年龄</th>
+        <th>性别</th>
+    </tr>
+    <tr>
+        <td>小王</td>
+        <td>30</td>
+        <td>男</td>
+    </tr>
+    <tr class="alt">
+        <td>小王</td>
+        <td>30</td>
+        <td>男</td>
+    </tr>
+    <tr>
+        <td>小王</td>
+        <td>30</td>
+        <td>男</td>
+    </tr>
+    <tr class="alt">
+        <td>小王</td>
+        <td>30</td>
+        <td>男</td>
+    </tr>
+</table>
+
+</body>
+</html>
