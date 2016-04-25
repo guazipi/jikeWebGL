@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //这是一个简单工厂模式
+    var XMLHttpFactory = function () {
+
+    };
+    XMLHttpFactory.createFactory = function () {
+        var XMLHttp = null;
+
+        if (window.XMLHttpRequest) {
+            XMLHttp = new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+            XMLHttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        return XMLHttp;
+    }
+
+    var AjaxHandler = function () {
+        var XMLHttp = XMLHttpFactory.createFactory();
+        return XMLHttp;
+    };
+    console.log(AjaxHandler());
+</script>
+
+</body>
+</html>
