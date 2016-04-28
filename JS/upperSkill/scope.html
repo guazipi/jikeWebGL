@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>闭包和作用域</title>
+</head>
+<body>
+<script>
+    //js是函数级别作用域,在内部的变量,内部都能访问,
+    // 但不一定会及时赋值, 外部不能访问内部的,内部能够访问外部的
+
+    //闭包就是拿到本不该属于他的东西
+    var j = 100;
+    ~(function () {
+        console.log(j);
+    }());
+    ///~把当前的内容转换为一个表达式进行输出
+    function test(){
+        var m=99;
+        return function (){
+            return m;
+        }
+    }
+
+    alert(test()())
+</script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>按值传递和按引用传递</title>
+</head>
+<body>
+<script>
+    ////按值传递
+    //    function test(num){
+    //       //这里对num这个变量创建了一个内存副本
+    //        var num=num+1;
+    //        return num;
+    //    }
+    //    var num=1;
+    //    alert(test(num));
+    //    alert(num);
+
+    //按引用传递,当前的obj对内存的这个地址指向同一个
+    function test(obj) {
+        obj.age = "20";
+        console.log('内部obj', obj);
+    }
+
+    var obj = {
+        name: "xiaoming"
+    };
+    test(obj);
+    console.log("外部:", obj);
+
+    //按引用传递 js对象 object array
+    //按值传递  string number boolean
+</script>
+
+</body>
+</html>

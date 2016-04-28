@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>this的使用</title>
+</head>
+<body>
+<button id="testbtn" style="color:red" value="test">test</button>
+<script>
+    //谁调指谁
+    //    function test(){
+    //        alert(this);
+    //    }
+    //    window.test();
+    //    this.m = 1000;
+    //    var obj={
+    //            m:100,
+    //        test: function () {
+    //            alert(this.m);
+    //        },
+    //        test1: function () {
+    //            return function () {
+    //                alert(this.m);
+    //            }
+    //        }
+    //    }
+    //    obj.test();
+    //    (obj.test1()());
+    //    var t=obj.test1();
+    //    t();//window.t()//里面的这个function指向到了外面的window
+
+    //    var style={
+    //        color:"green"
+    //    };
+    //    test();//window.test()
+    //
+    //    function test(){
+    //        alert(this.style.color);
+    //    }
+    //    document.getElementById("testbtn").onclick=test;
+
+    //    this.a=1000;
+    //    function test(){
+    //        this.a=1;
+    //    }
+    //    test.prototype.geta= function () {
+    //        return this.a;
+    //    }
+    //    var p=new test();
+    //    console.log(p.geta());
+
+    function test() {
+        this.a = 1;
+    }
+    test.prototype.a = 10;
+    var p = new test();
+    console.log(p);//this主动权较大,因为他在构造函数中
+    console.log(p.a);
+</script>
+</body>
+</html>
