@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>设计模式书上的东西</title>
+</head>
+<body>
+<input type="text" value="click me" id="loginBtn">
+<script>
+    //    var getSingle= function (fn) {
+    //        var result;
+    //        return function () {
+    //            return result||(result=fn.apply(this,arguments));
+    //        }
+    //    };
+    //    var createLoginLayer= function () {
+    //        var div=document.createElement("div");
+    //        div.innerHTML="我是登录浮窗";
+    //        div.style.display='none';
+    //        document.body.appendChild(div);
+    //        return div;
+    //    };
+    //    var createSingeltonLoginLayer=getSingle(createLoginLayer);
+    //    document.getElementById("loginBtn").onclick= function () {
+    //        var loginLayer=createLoginLayer();
+    //        loginLayer.style.display='block';
+    //    };
+
+    var CreateDiv = (function () {
+        var instance;
+        var CreateDiv = function (html) {
+            if (instance) {
+                return instance;
+            }
+            this.html = html;
+            this.init();
+
+            return instance = this;
+        }
+        CreateDiv.prototype.init = function () {
+            var div = document.createElement("div");
+            div.innerHTML = this.html;
+            document.body.appendChild(div);
+        };
+        return CreateDiv;
+    })();
+
+    var a = new CreateDiv('sven1');
+    var b = new CreateDiv("sven2");
+
+    alert(a == b);
+
+</script>
+
+</body>
+</html>
