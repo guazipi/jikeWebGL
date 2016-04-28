@@ -59,6 +59,8 @@ function imgLocation(parent, content) {
             //console.log(ccontent[i].offsetHeight);
         } else {
             var minheight = Math.min.apply(null, boxHeightArr);
+            //等价于Math.min(boxHeightArr[0],boxHeightArr[1],boxHeightArr[2]...)
+            var a=Math.min(1,2,3,4);
             var minIndex = getminheightLocation(boxHeightArr, minheight);
 
             ccontent[i].style.position = 'absolute';
