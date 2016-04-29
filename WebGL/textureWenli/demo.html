@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>案例demo</title>
+</head>
+<body>
+<canvas id="canvas" width="600" height="600"></canvas>
+<script src="lib.js"></script>
+<script>
+    var canvas = document.getElementById('canvas');
+    var cxt = canvas.getContext('webgl');
+
+
+    var program = initShader(cxt, vertexShaderSource, fragmentShaderSource);
+</script>
+</body>
+</html>

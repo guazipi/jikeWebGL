@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebGL贴图</title>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500" style="background: rebeccapurple"></canvas>
+<script src="lib.js"></script>
+<script>
+    var canvas = document.getElementById('canvas');
+    var cxt = canvas.getContext('webgl');
+
+    var vertexShaderSource = "" +
+            "attribute vec4 pos;" +
+            "attribute vec2 texPos;" +
+            "varying vec2 v_texPos;" +
+            "void main(){" +
+            "  gl_Position=pos;" +
+            "  v_texPos=texPos;" +
+            "}" +
+            "";
+    var fragmentShaderSource = "" +
+            "precision mediump float;" +
+            "varying vec2 v_texPos;" +
+            "uniform sampler2D ss;" +
+            "void main(){" +
+            "  gl_FragColor=texture2D(ss,v_texPos);" +
+            "}" +
+            "";
+
+    var program = initShader(cxt, vertexShaderSource, fragmentShaderSource);
+    var data = new Float32Array([
+        0.0, 0.0, 0.0, 1.0,
+        0.0, -.5, 0.0, 0.0,
+        0.5, 0.0, 1.0, 1.0,
+        0.5, -.5, 1.0, 0.0
+    ]);
+    var buffer=cxt.createBuffer();
+    cxt.bindBuffer(cxt.ARRAY_BUFFER,buffer);
+    cxt.bufferData(cxt.ARRAY_BUFFER,data,cxt.STATIC_DRAW);
+
+    var posLocation=cxt.getAttribLocation(program,'pos');
+    var texPosLocation=cxt.getAttribLocation(program,'texPos');
+    var texLocation=cxt.getUniformLocation(program,'ss');
+
+    var BYTES_SIZE=data.BYTES_PER_ELEMENT;
+    cxt.vertexAttribPointer(posLocation,2,cxt.FLOAT,false,BYTES_SIZE*4,0);
+    cxt.enableVertexAttribArray(posLocation);
+
+    cxt.vertexAttribPointer(texPosLocation,2,cxt.FLOAT,false,BYTES_SIZE*4,BYTES_SIZE*2);
+    cxt.enableVertexAttribArray(texPosLocation);
+
+    function loadImage(url,fn){
+        var img=new Image();
+        img.src=url;
+        img.onload=function(){
+            fn(img);
+        };
+    }
+
+    loadImage('./img.png', function (img) {
+        var texture=cxt.createTexture();
+        cxt.pixelStorei(cxt.UNPACK_FLIP_Y_WEBGL,1);
+        cxt.activeTexture(cxt.TEXTURE0);
+        cxt.bindTexture(cxt.TEXTURE_2D,texture);
+
+        cxt.texParameteri(cxt.TEXTURE_2D,cxt.TEXTURE_MIN_FILTER,cxt.LINEAR);
+        cxt.texImage2D(cxt.TEXTURE_2D,0,cxt.RGB,cxt.RGB,cxt.UNSIGNED_BYTE,img);
+
+        cxt.uniform1i(texLocation,0);
+        cxt.drawArrays(cxt.TRIANGLE_STRIP,0,4);
+    })
+
+
+</script>
+</body>
+</html>
