@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>命令模式</title>
+</head>
+<body>
+<script>
+    var lian={};
+    lian.paobing= function (pao_num) {
+        alert(pao_num+"pao");
+    };
+    lian.bubing= function (bubing_num) {
+        alert(bubing_num+"ren");
+    };
+    lian.lianzhang= function (mingling) {
+        lian[mingling.type](mingling.num);//这种写法还是比较巧妙的
+    };
+
+    //调用命令
+    lian.lianzhang({
+        type:"paobing",
+        num:100
+    });
+    lian.lianzhang({
+        type:"bubing",
+        num:500
+    })
+</script>
+</body>
+</html>
