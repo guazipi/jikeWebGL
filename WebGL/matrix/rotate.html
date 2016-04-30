@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图形旋转</title>
+</head>
+<body>
+<button id="faster">快</button>
+<button id="slower">慢</button>
+<button id="stop">停止</button>
+
+<canvas id="canvas" width="600" height="600"></canvas>
+<script src="lib.js"></script>
+<script>
+    var kuaiBtn = document.getElementById('faster');
+    var manBtn = document.getElementById('slower');
+    var stopBtn = document.getElementById('stop');
+
+    var canvas = document.getElementById('canvas');
+    var cxt = canvas.getContext('webgl');
+    var vertexShaderSource = "" +
+            "attribute vec4 pos;" +
+            "uniform mat4 xf;" +
+            "void main(){" +
+            "  gl_Position=xf*pos;" +
+            "}" +
+            "";
+    var fragmentShaderSource = "" +
+            "void main(){" +
+            "  gl_FragColor=vec4(1.0,0.0,0.0,1.0);" +
+            "}" +
+            "";
+
+    var program = initShader(cxt, vertexShaderSource, fragmentShaderSource);
+    var data = new Float32Array([
+        0.0, 0.0,
+        0.5, 0.0
+    ]);
+
+    var t, angle, cosB, sinB, zl, is, isOpen;
+    angle = 0;
+    zl = 1;
+    isOpen = true;
+
+    kuaiBtn.onclick = function () {
+        if (zl < 20) {
+            zl += 1;
+        }
+    };
+    manBtn.onclick = function () {
+        if (zl > 0) {
+            zl -= 1;
+        }
+    };
+    stopBtn.onclick = function () {
+        isOpen = !isOpen;
+        if(isOpen){
+            run();
+        }
+    };
+    var buffer = cxt.createBuffer();
+    cxt.bindBuffer(cxt.ARRAY_BUFFER, buffer);
+    cxt.bufferData(cxt.ARRAY_BUFFER, data, cxt.STATIC_DRAW);
+
+    var posLocation = cxt.getAttribLocation(program, 'pos');
+    var xfLocation = cxt.getUniformLocation(program, 'xf');
+
+    cxt.vertexAttribPointer(posLocation, 2, cxt.FLOAT, false, 0, 0);//????????
+    cxt.enableVertexAttribArray(posLocation);
+
+    var time;
+    function run() {
+        angle += zl;
+        t = Math.PI * angle / 180;
+        sinB = Math.sin(t);
+        cosB = Math.cos(t);
+        var xf = new Float32Array([
+            cosB, sinB, 0.0, 0.0,
+            -sinB, cosB, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        ]);
+        cxt.uniformMatrix4fv(xfLocation, false, xf);//?????????????
+
+        cxt.clearColor(0.0, 0.5, 0.5, 1.0);
+        cxt.clear(cxt.COLOR_BUFFER_BIT);
+        cxt.drawArrays(cxt.LINES, 0, 2)
+        time=setTimeout(run, 500);
+
+        if(!isOpen){
+            clearTimeout(time);
+        }
+    }
+
+    run();
+
+
+</script>
+</body>
+</html>
