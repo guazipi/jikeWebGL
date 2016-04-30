@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>简单动画</title>
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script src="lib.js"></script>
+
+</head>
+<body>
+<script>
+    var vertexShaderSource = "" +
+            "attribute vec4 pos;" +
+            "uniform mat4 rotateMatrix;" +
+            "uniform mat4 translateMatrix;" +
+            "void main(){" +
+            "  gl_Position=rotateMatrix*translateMatrix*pos;" +
+            "}" +
+            "";
+    var fragmentShaderSource = "" +
+            "void main(){" +
+            "  gl_FragColor=vec4(1.0,0.0,0.0,0.0);" +
+            "}" +
+            "";
+    var canvas = document.getElementById("canvas");
+    var cxt = canvas.getContext("webgl");
+    var program = initShader(cxt, vertexShaderSource, fragmentShaderSource);
+    var sinB, cosB;
+    var tx = 0.0, ty = 0.0,
+            Angle = 30.0;
+
+    var data = new Float32Array([
+        0.0, 0.2,
+        -0.2, -0.2,
+        0.2, -0.2
+    ]);
+    var buffer = cxt.createBuffer();
+    cxt.bindBuffer(cxt.ARRAY_BUFFER, buffer);
+    cxt.bufferData(cxt.ARRAY_BUFFER, data, cxt.STATIC_DRAW);
+
+    var posLocation = cxt.getAttribLocation(program, 'pos');
+    cxt.vertexAttribPointer(posLocation, 2, cxt.FLOAT, false, 0, 0);
+    cxt.enableVertexAttribArray(posLocation);
+
+
+    function run() {
+        var t = Math.PI * Angle / 180;
+        sinB = Math.sin(t);
+        cosB = Math.cos(t);
+
+        var rotateMatrix = new Float32Array([
+            cosB, sinB, 0.0, 0.0,
+            -sinB, cosB, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        ]);
+        tx += 0.005;
+        ty+=0.005;
+        Angle+=1;
+        var translateMatrix = new Float32Array([
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            tx, ty, 0.0, 1.0
+        ]);
+        var scaleMatrix = new Float32Array([]);
+
+        var rotateLocation = cxt.getUniformLocation(program, "rotateMatrix");
+        var translateLocation = cxt.getUniformLocation(program, "translateMatrix");
+
+        cxt.uniformMatrix4fv(rotateLocation, false, rotateMatrix);
+        cxt.uniformMatrix4fv(translateLocation, false, translateMatrix);
+
+        cxt.clearColor(0.2, 0.2, 0.2, 1.0);
+        cxt.clear(cxt.COLOR_BUFFER_BIT);
+
+        cxt.drawArrays(cxt.TRIANGLES, 0, 3);
+
+
+        setTimeout(run, 100);
+    }
+    run();
+
+</script>
+
+</body>
+</html>
