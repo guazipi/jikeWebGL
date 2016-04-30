@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>varying变量使用,效果为旋转变色的四边形</title>
+</head>
+<body>
+<canvas id="canvas" width="600" height="600"></canvas>
+<script src="lib.js"></script>
+<script>
+    var vertexShaderSource = "" +
+            "attribute vec4 pos;" +
+            "uniform mat4 xf;" +
+            "varying vec4 vpos;" +
+            "void main(){" +
+            "  gl_Position=xf*pos;" +
+            "  vpos=gl_Position;" +
+            "}" +
+            "";
+    var fragmentShaderSource = "" +
+            "precision lowp float;" +
+            "varying vec4 vpos;" +
+            "void main(){" +
+            "  if(vpos.x>=0.0&&vpos.y>=0.0){" +
+            "      gl_FragColor=vec4(1.0,0.0,0.0,1.0);" +
+            "  }else if(vpos.x>0.0&&vpos.y<0.0){" +
+            "      gl_FragColor=vec4(0.0,1.0,0.0,1.0);" +
+            "  }else if(vpos.x<0.0&&vpos.y>0.0){" +
+            "      gl_FragColor=vec4(0.0,0.0,1.0,1.0);" +
+            "  }else{" +
+            "      gl_FragColor=vec4(0.2,0.2,0.2,1.0);" +
+            "  }" +
+            "}" +
+            "";
+    var canvas = document.getElementById("canvas");
+    var cxt = canvas.getContext("webgl");
+    var program = initShader(cxt, vertexShaderSource, fragmentShaderSource);
+    var data = new Float32Array([
+        -0.3, 0.3,
+        -0.5, -0.3,
+        0.5, 0.3,
+        0.3, -0.3
+    ]);
+    bindAttribute(cxt, 'pos', data, program);
+    var xfLocation = cxt.getUniformLocation(program, "xf");
+
+    var angle = 0;
+    var fx = true;//true 顺时针///这样一个变量很重要也省很多事
+    document.addEventListener('keydown', function (event) {
+        switch (event.keyCode) {
+            case 37:
+                fx = false;
+                break;
+            case 39:
+                fx = true;
+                break;
+        }
+    });
+
+
+    (function run() {
+        if (fx) {
+            --angle;
+        } else {
+            ++angle;
+        }
+
+        var xzMatrix = createRotateMatrix(angle);
+
+        cxt.uniformMatrix4fv(xfLocation, false, xzMatrix);
+        cxt.drawArrays(cxt.TRIANGLE_STRIP, 0, 4);
+
+        setTimeout(run, 100);
+    })();
+</script>
+</body>
+</html>

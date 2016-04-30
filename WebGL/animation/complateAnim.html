@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>复杂动画</title>
+</head>
+<body>
+<canvas id="canvas" width="600" height="600"></canvas>
+<script src="lib.js"></script>
+<script>
+    var vertexShaderSource = "" +
+            "attribute vec4 pos;" +
+            "uniform mat4 xf;" +
+            "void main(){" +
+            "  gl_Position=xf*pos;" +
+            "}" +
+            "";
+    var fragmentShaderSource = "" +
+            "void main(){" +
+            "   gl_FragColor=vec4(1.0,0.5,0.5,1.0);" +
+            "}" +
+            "";
+    var canvas = document.getElementById("canvas");
+    var cxt = canvas.getContext("webgl");
+    var program = initShader(cxt, vertexShaderSource, fragmentShaderSource);
+    bindAttribute(cxt, 'pos', new Float32Array([
+        0.0, 0.1,
+        -0.1, -0.1,
+        0.1, -0.1
+    ]), program);
+    var xfLocation = cxt.getUniformLocation(program, "xf");
+
+    var angle = 0, sx = 1.0, sy = 1.0, tx = 0.0, ty = 0.0;
+    var state = true;
+    function jian() {
+        sx -= 0.1;
+        sy -= 0.1;
+        angle -= 3;
+        if (angle <= 0) {
+            state = true;
+        }
+    }
+    function jia() {
+        sx += 0.1;
+        sy += 0.1;
+        angle += 3;
+        if (angle > 50) {
+            state = false;
+        }
+    }
+    document.addEventListener('keydown', function (event) {
+        var TT = 0.05;
+        switch (event.keyCode) {
+            case 37:
+                tx -= TT;
+                break;
+            case 38:
+                ty += TT;
+                break;
+            case 39:
+                tx += TT;
+                break;
+            case 40:
+                ty -= TT;
+                break;
+        }
+    });
+
+    (function run() {
+        if (state) {
+            jia();
+        } else {
+            jian();
+        }
+//        angle += 2;
+//        tx += 0.005;
+//        ty += 0.005;
+//        sx += 0.1;
+//        sy += 0.1;
+
+        var xzMatrix = createRotateMatrix(angle);
+        var sfMatrix = createScaleMatrix(sx, sy);
+        var pyMatrix = createTranslateMatrix(tx, ty);
+        cxt.uniformMatrix4fv(xfLocation, false, multiplyMatrix(pyMatrix, multiplyMatrix(sfMatrix, xzMatrix)));
+        cxt.drawArrays(cxt.TRIANGLES, 0, 3);
+
+        setTimeout(run, 100);
+    })();
+</script>
+</body>
+</html>
