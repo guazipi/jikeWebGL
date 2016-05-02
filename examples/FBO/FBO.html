@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script type="text/javascript" src="gl-matrix-min.js"></script>
+    <script type="text/javascript" src="FBO.js"></script>
+    <script id="cubeshader-fs" type="x-shader/x-fragment">
+        precision mediump float;
+
+        varying vec3 normal;
+        varying vec3 tex1;
+        varying vec3 tex2;
+        void main( void )
+        {
+        float x = tex1.x * 6.28 * 8.0; //2兀 * 8
+        float y = tex1.y * 6.28 * 8.0; //2兀 * 8
+        //cos(x)= 8个 (1 -1 1)
+        gl_FragColor = vec4(tex2,1.0) * vec4(sign(cos(x)+cos(y))); //
+        //gl_FragColor = vec4(normal*vec3(0.5)+vec3(0.5), 1);
+        }
+    </script>
+
+    <script id="cubeshader-vs" type="x-shader/x-vertex">
+        attribute vec3 a_position;
+        attribute vec3 a_normal;
+        attribute vec2 a_texCoord;
+
+        uniform mat4 view;
+        uniform mat4 perspective;
+        varying vec3 normal;
+        varying vec3 tex1;
+        varying vec3 tex2;
+        void main( void )
+        {
+        gl_Position = perspective * view * vec4(a_position,1.0);
+        normal = a_normal;
+        tex1 = vec3(a_texCoord,0.0);
+        tex2 = normalize(a_position)*0.5+0.5;
+        }
+    </script>
+
+    <script id="sphereshader-fs" type="x-shader/x-fragment">
+        precision mediump float;
+
+        varying vec3 normal;
+        varying vec3 eyevec;
+        uniform samplerCube mapCube;
+        void main( void )
+        {
+        gl_FragColor = textureCube(mapCube, reflect(normalize(-eyevec), normalize(normal)));
+        }
+    </script>
+
+    <script id="sphereshader-vs" type="x-shader/x-vertex">
+        attribute vec3 a_position;
+        attribute vec3 a_normal;
+
+        uniform mat4 model;
+        uniform mat4 view;
+        uniform mat4 perspective;
+        uniform vec3 eye;
+
+        varying vec3 normal;
+        varying vec3 eyevec;
+
+        void main( void )
+        {
+        gl_Position = perspective * view * model * vec4(a_position,1.0);
+        eyevec = -eye;// a_position.xyz;
+        normal = a_normal;
+        }
+    </script>
+</head>
+<body onload="webGLStart(fboCanvas);">
+    <canvas id="fboCanvas" style="border: none;" width="800" height="500"></canvas>
+</body>
+</html>
